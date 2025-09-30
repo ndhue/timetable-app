@@ -1,0 +1,43 @@
+.rbc-calendar {
+  background-color: var(--card);
+
+  .rbc-today {
+    background-color: var(--destructive-foreground);
+  }
+
+  .rbc-day-bg {
+    border-color: var(--border);
+  }
+
+  .rbc-off-range-bg {
+    background: var(--input);
+  }
+
+  .rbc-toolbar {
+    background-color: var(--calendar-header-bg) !important;
+    color: var(--color-foreground);
+  }
+
+  .rbc-event {
+    background-color: var(--chart-2);
+    color: var(--foreground);
+    border: none;
+    padding: 0.5rem;
+
+    &-label {
+      display: none !important;
+    }
+  }
+
+  .rbc-time-view {
+    .rbc-timeslot-group {
+      min-height: 50px;
+    }
+  }
+
+  .rbc-month-row {
+    .rbc-row-bg {
+      right: 0;
+    }
+  }
+}

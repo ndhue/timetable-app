@@ -1,14 +1,11 @@
-"use client";
-
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { MyCalendar } from "@/components/views/calendar";
 
 export default function Home() {
   return (
     <div className="h-screen w-screen flex items-center justify-center">
-      <Button onClick={() => toast.success("This is my toaster")}>
-        Click here
-      </Button>
+      <div className="w-3/4 h-3/4">
+        <MyCalendar />
+      </div>
     </div>
   );
 }
