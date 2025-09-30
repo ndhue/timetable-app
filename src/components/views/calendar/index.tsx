@@ -69,6 +69,8 @@ export const MyCalendar = () => {
 
   return (
     <DnDCalendar
+      step={15}
+      timeslots={4}
       localizer={localizer}
       events={events}
       onEventDrop={moveEvent}
