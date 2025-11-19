@@ -29,6 +29,20 @@
     }
   }
 
+  .rbc-month-view {
+    overflow-y: scroll;
+    .rbc-show-more {
+      color: var(--accent);
+      padding-top: 0.5rem;
+      font-weight: 500;
+      background-color: transparent;
+
+      &:hover {
+        font-weight: 600;
+      }
+    }
+  }
+
   .rbc-time-view {
     .rbc-timeslot-group {
       min-height: 50px;
@@ -36,6 +50,7 @@
   }
 
   .rbc-month-row {
+    min-height: 140px;
     .rbc-row-bg {
       right: 0;
     }
@@ -43,5 +58,15 @@
 
   .rbc-current-time-indicator {
     background-color: var(--accent);
+  }
+}
+
+.rbc-overlay {
+  .rbc-event {
+    &[type="popup"] {
+      background-color: var(--accent);
+      color: var(--foreground);
+      margin-top: .2rem;
+    }
   }
 }
