@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { enUS } from "date-fns/locale";
 import { CalendarEvent } from "@/types/calendar";
 import { format, parse, startOfWeek, getDay } from "date-fns";
@@ -10,6 +10,10 @@ import { MonthEvent, WeekEvent } from "@/components/ui/calendar/event";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import { CalendarToolbar } from "@/components/ui/calendar/toolbar";
+import { getAllEvents } from "@/app/actions";
+import { toast } from "sonner";
+
+import "./style.scss";
 
 import "./style.scss";
 
@@ -28,29 +32,44 @@ const localizer = dateFnsLocalizer({
 const DnDCalendar = withDragAndDrop<CalendarEvent, CalendarEvent>(Calendar);
 
 export const MyCalendar = () => {
-  const [events, setEvents] = useState<CalendarEvent[]>([
-    {
-      id: 1,
-      title: "Học tiếng Trung",
-      start: new Date(2025, 9, 1, 19, 0),
-      end: new Date(2025, 9, 1, 20, 0),
-      tag: "study",
-    },
-    {
-      id: 2,
-      title: "Đi bơi",
-      start: new Date(2025, 9, 2, 17, 0),
-      end: new Date(2025, 9, 2, 18, 0),
-      tag: "exercise",
-    },
-    {
-      id: 3,
-      title: "Test",
-      start: new Date(2025, 9, 2, 20, 0),
-      end: new Date(2025, 9, 2, 21, 0),
-      tag: "exercise",
-    },
-  ]);
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
+
+  const loadEvents = useCallback(() => {
+    getAllEvents()
+      .then((result) => {
+        if (!result.success) {
+          toast.error("Failed to load events", {
+            description: result.error,
+          });
+          return;
+        }
+
+        const mappedEvents: CalendarEvent[] = result.events.map((event) => ({
+          id: event.id,
+          title: event.title,
+          start: new Date(event.startTime),
+          end: new Date(event.endTime),
+          tag: event.category?.name ?? "Uncategorized",
+        }));
+
+        setEvents(mappedEvents);
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error("Failed to load events.");
+      });
+  }, []);
+
+  useEffect(() => {
+    loadEvents();
+
+    const refreshHandler = () => {
+      loadEvents();
+    };
+
+    window.addEventListener("events:refresh", refreshHandler);
+    return () => window.removeEventListener("events:refresh", refreshHandler);
+  }, [loadEvents]);
 
   const moveEvent = ({
     event,

@@ -13,31 +13,56 @@ import { Textarea } from "@/components/ui/textarea";
 import { Loader2, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { createEventWithAI } from "@/app/actions";
+import { localizedDate } from "@/lib/utils";
 
-interface CreateViaAIDrawerProps {
-  onGenerate?: (prompt: string) => Promise<any>; //TODO: api callback
-}
-
-export function CreateViaAIDrawer({ onGenerate }: CreateViaAIDrawerProps) {
+export function CreateViaAIDrawer() {
+  const [open, setOpen] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleGenerate = async () => {
-    if (!prompt.trim()) return;
+    if (!prompt.trim()) {
+      toast.error("Please enter a prompt.");
+      return;
+    }
+
     setLoading(true);
     try {
-      const data = await onGenerate?.(prompt);
-      console.log(data);
+      const result = await createEventWithAI(prompt);
+
+      if (result.success) {
+        const totalCreated = result.totalCreated ?? (result.events?.length ?? 0);
+        const createdAt = result.event?.createdAt
+          ? localizedDate(new Date(result.event.createdAt))
+          : undefined;
+
+        toast.success(
+          totalCreated > 1
+            ? `${totalCreated} events have been created with AI`
+            : "Event has been created with AI",
+          {
+            description: createdAt ? `First event created at ${createdAt}` : undefined,
+          },
+        );
+        window.dispatchEvent(new Event("events:refresh"));
+        setPrompt("");
+        setOpen(false);
+      } else {
+        toast.error("Failed to create event with AI", {
+          description: result.error,
+        });
+      }
     } catch (err) {
       console.error(err);
-      toast.error("Failed to generate schedule.");
+      toast.error("Failed to create event with AI.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Drawer>
+    <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         <Button>
           <PlusIcon className="size-5" />
