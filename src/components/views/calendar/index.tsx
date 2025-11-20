@@ -7,11 +7,11 @@ import { format, parse, startOfWeek, getDay } from "date-fns";
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import { MonthEvent, WeekEvent } from "@/components/ui/calendar/event";
-
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
-import "./style.scss";
 import { CalendarToolbar } from "@/components/ui/calendar/toolbar";
+
+import "./style.scss";
 
 const locales = {
   "en-US": enUS,
@@ -43,6 +43,13 @@ export const MyCalendar = () => {
       end: new Date(2025, 9, 2, 18, 0),
       tag: "exercise",
     },
+    {
+      id: 3,
+      title: "Test",
+      start: new Date(2025, 9, 2, 20, 0),
+      end: new Date(2025, 9, 2, 21, 0),
+      tag: "exercise",
+    },
   ]);
 
   const moveEvent = ({
@@ -68,25 +75,28 @@ export const MyCalendar = () => {
   };
 
   return (
-    <DnDCalendar
-      step={15}
-      timeslots={4}
-      localizer={localizer}
-      events={events}
-      onEventDrop={moveEvent}
-      resizable
-      onEventResize={moveEvent}
-      selectable
-      views={["month", "week"]}
-      components={{
-        toolbar: CalendarToolbar,
-        month: {
-          event: MonthEvent,
-        },
-        week: {
-          event: WeekEvent,
-        },
-      }}
-    />
+    <>
+      <DnDCalendar
+        step={15}
+        timeslots={4}
+        localizer={localizer}
+        events={events}
+        onEventDrop={moveEvent}
+        resizable
+        onEventResize={moveEvent}
+        selectable
+        popup
+        views={["month", "week"]}
+        components={{
+          toolbar: CalendarToolbar,
+          month: {
+            event: MonthEvent,
+          },
+          week: {
+            event: WeekEvent,
+          },
+        }}
+      />
+    </>
   );
 };
