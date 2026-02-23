@@ -15,26 +15,28 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
+import { Category } from "@prisma/client";
 
 interface CategorySelectProps {
-  categories: string[];
+  categories: Category[];
   value?: string;
   onChange?: (value: string) => void;
+  isLoading?: boolean;
 }
 
 export const CreateCategoryDialog = ({
-  categories: initialCategories,
+  categories,
   value,
   onChange,
+  isLoading
 }: CategorySelectProps) => {
-  const [categories, setCategories] = useState<string[]>(initialCategories);
   const [openDialog, setOpenDialog] = useState(false);
   const [newCategory, setNewCategory] = useState("");
 
   const handleCreateCategory = () => {
     if (!newCategory.trim()) return;
 
-    setCategories((prev) => [...prev, newCategory.trim()]);
+    // TODO: create category here
     onChange?.(newCategory.trim());
     setNewCategory("");
     setOpenDialog(false);
@@ -58,8 +60,8 @@ export const CreateCategoryDialog = ({
         </SelectTrigger>
         <SelectContent>
           {categories.map((cat) => (
-            <SelectItem key={cat} value={cat}>
-              {cat}
+            <SelectItem key={cat.id} value={cat.id}>
+              {cat.name}
             </SelectItem>
           ))}
 
@@ -69,7 +71,6 @@ export const CreateCategoryDialog = ({
         </SelectContent>
       </Select>
 
-      {/* Dialog tạo category */}
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent className="sm:max-w-[320px]">
           <DialogHeader>
@@ -86,7 +87,7 @@ export const CreateCategoryDialog = ({
             <Button variant="outline" onClick={() => setOpenDialog(false)}>
               Cancel
             </Button>
-            <Button onClick={handleCreateCategory}>Create</Button>
+            <Button onClick={() => {}}>Create</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

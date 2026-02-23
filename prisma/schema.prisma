@@ -9,33 +9,21 @@ datasource db {
 
 /* ======== MODELS ======== */
 
-/* User model nếu cần auth cơ bản */
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  events    Event[]
-  createdAt DateTime @default(now())
-}
-
-/* Category cho sự kiện */
 model Category {
   id        String   @id @default(cuid())
   name      String
-  color     String?      // ví dụ lưu mã màu
+  color     String?  // store background color
   events    Event[]
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-/* Event cho calendar */
 model Event {
   id          String    @id @default(cuid())
   title       String
   description String?
   startTime   DateTime
   endTime     DateTime
-  user        User      @relation(fields: [userId], references: [id])
-  userId      String
   category    Category? @relation(fields: [categoryId], references: [id])
   categoryId  String?
   createdAt   DateTime  @default(now())

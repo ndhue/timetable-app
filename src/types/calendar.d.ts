@@ -1,5 +1,5 @@
 export type CalendarEvent = {
-  id: number;
+  id: string;
   title: string;
   start: Date;
   end: Date;

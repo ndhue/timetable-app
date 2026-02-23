@@ -24,6 +24,12 @@
     border: none;
     padding: 0.5rem;
 
+    &-content {
+      & > button > div > div {
+        text-align: left;
+      }
+    }
+
     &-label {
       display: none !important;
     }
@@ -66,7 +72,7 @@
     &[type="popup"] {
       background-color: var(--accent);
       color: var(--foreground);
-      margin-top: .2rem;
+      margin-top: 0.2rem;
     }
   }
 }
