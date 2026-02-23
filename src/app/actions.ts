@@ -57,6 +57,45 @@ export async function getAllEvents() {
   }
 }
 
+const eventsRangeSchema = z.object({
+  start: z.string(),
+  end: z.string(),
+});
+
+export async function getEventsByRange(input: { start: string; end: string }) {
+  try {
+    const { start, end } = eventsRangeSchema.parse(input);
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+
+    const events = await db.event.findMany({
+      where: {
+        startTime: { lt: endDate },
+        endTime: { gt: startDate },
+      },
+      include: { category: true },
+      orderBy: { startTime: "asc" },
+    });
+
+    return { success: true, events };
+  } catch (error) {
+    console.error("Failed to fetch events by range:", error);
+    return { success: false, error: "Failed to fetch events", events: [] };
+  }
+}
+
+export async function deleteEvent(id: string) {
+  try {
+    await db.event.delete({
+      where: { id },
+    });
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to delete event:", error);
+    return { success: false, error: "Failed to delete event" };
+  }
+}
+
 const aiGeneratedEventSchema = z
   .object({
     title: z.string().min(1, "Title is required"),
