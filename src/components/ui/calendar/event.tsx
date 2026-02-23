@@ -1,4 +1,5 @@
 import EventDetailPopover from "@/components/ui/calendar/event-detail-popover";
+import { cn } from "@/lib/utils";
 import { CalendarEvent } from "@/types/calendar";
 import { format } from "date-fns";
 import { useMemo } from "react";
@@ -15,11 +16,18 @@ export const MonthEvent = ({ event }: Props) => {
   }, [start, end]);
 
   return (
-    <EventDetailPopover key={id}>
+    <EventDetailPopover key={id} event={event}>
       <div className="flex flex-col text-xs space-y-0.5">
         <div className="font-semibold text-xs">{title}</div>
         <div className="text-xs">{customTime}</div>
-        <div className="w-fit text-[10px] bg-secondary text-secondary-foreground rounded-sm py-0.5 px-2">
+        <div
+          className={cn(
+            "w-fit text-[10px] rounded-sm py-0.5 px-2",
+            event.isConflicted
+              ? "bg-destructive/20 text-destructive"
+              : "bg-secondary text-secondary-foreground",
+          )}
+        >
           {tag}
         </div>
       </div>
@@ -35,11 +43,18 @@ export const WeekEvent = ({ event }: Props) => {
   }, [start, end]);
 
   return (
-    <EventDetailPopover key={id}>
+    <EventDetailPopover key={id} event={event}>
       <div className="flex flex-col text-xs space-y-0.5">
         <div className="flex justify-between items-center">
           <div className="font-semibold text-xs">{title}</div>
-          <div className="w-fit text-[10px] bg-secondary text-secondary-foreground rounded-sm py-0.5 px-2">
+          <div
+            className={cn(
+              "w-fit text-[10px] rounded-sm py-0.5 px-2",
+              event.isConflicted
+                ? "bg-destructive/20 text-destructive"
+                : "bg-secondary text-secondary-foreground",
+            )}
+          >
             {tag}
           </div>
         </div>

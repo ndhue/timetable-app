@@ -24,6 +24,11 @@
     border: none;
     padding: 0.5rem;
 
+    &.event-conflict {
+      background-color: var(--destructive) !important;
+      color: var(--destructive-foreground) !important;
+    }
+
     &-content {
       & > button > div > div {
         text-align: left;
